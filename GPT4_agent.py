@@ -9,20 +9,22 @@ client = OpenAI()
 
 
 class GPT4_agent:
-    def __init__(self, instruction, command_docs):
-        self.instruction = instruction
+    def __init__(self, command_docs):
         self.command_docs = command_docs
         self.history = [
-            {"role": "system", "content": f"Task: {instruction} \n\nAvailable Commands: \n{command_docs} \n\nInstructoin: Accomplish the Task given using the Available Commands and by observing what is presented to you. write the command between [command]. For example, [command]go east[command]"},
+            {"role": "system", "content": f"Instructoin: Accomplish the Task given using the Available Commands and by observing what is presented to you. write the command between [command]. For example, [command]go east[command] \n\nAvailable Commands: \n{command_docs}"},
         ]
 
     def extract_command(self, text):
-        command_tag = '[command]'
-        start = text.index(command_tag) + len(command_tag)
-        code = text[start:]
-        end = code.index(command_tag)
-        code = code[:end]
-        return code
+        try:
+            command_tag = '[command]'
+            start = text.index(command_tag) + len(command_tag)
+            code = text[start:]
+            end = code.index(command_tag)
+            code = code[:end]
+            return code
+        except Exception as e:
+            return 'command not found. Please put it between [command]'
 
 
 
